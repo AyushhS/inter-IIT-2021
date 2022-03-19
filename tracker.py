@@ -14,8 +14,9 @@ bodydetector = cv2.CascadeClassifier('haarcascade_fullbody.xml')
 Videopath = str(sys.argv)[1]
 cap = cv2.VideoCapture(Videopath)
 
-def func(a):
-    return a[0]['box'][0]
+age_model = tf.keras.models.load_model('Age_model')
+gender_model = tf.keras.models.load_model('Gender_model')
+
 
 framenumber = 1
 
@@ -24,17 +25,25 @@ while True:
 
     faces = facedetector.detect_faces(image)
     if faces == []:
+        cv2.imshow('img', image)
         framenumber += 1
         continue;
-    #faces.sort(key=func)
 
     ID = 0
 
     for face in faces:
         (x, y, w, h) = face['box']
         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        face = image[y:y+h,x:x+w]
         ID += 1
         cv2.putText(image, str(ID), (x, y), cv2.FONT_HERSHEY_COMPLEX, 1, (255,0,0), 1)
+
+        predicted_age_actual = age_model.predict(face)
+        predicted_gender = np.argmax(gender_model.predict(face))
+
+        predicted_age_min = int(predicted_age_actual / 10) * 10
+        predicted_age_max = predicted_age_min + 10
+
         newrow = [{
             'frame num':framenumber,
             'person id':ID,
@@ -42,10 +51,10 @@ while True:
             'bb_ymin':y,
             'bb_height':h,
             'bb_width':w,
-            'age_min':0,
-            'age_max':0,
-            'age_actual':0,
-            'gender':0
+            'age_min':predicted_age_min,
+            'age_max':predicted_age_max,
+            'age_actual':predicted_age_actual,
+            'gender':predicted_gender
         }]
         output = output.append(newrow)
 
