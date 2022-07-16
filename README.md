@@ -9,7 +9,7 @@ Architecture of the manually trained networks are present in the ```Age model pl
 
 Sample results of Training _(Title are the Predictions)_ -
 
-![](output.png)  ![](output2.png)
+![](https://cdn.discordapp.com/attachments/707892105447735336/997916282831785994/output.png)![](https://cdn.discordapp.com/attachments/707892105447735336/997916283179905138/output2.png)
 
 ## How to use -
 
