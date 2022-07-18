@@ -1,4 +1,4 @@
-numpy 
+numpy
 pandas
-tensorflow
-opencv
+tensorflow-gpu
+opencv-python
